@@ -1,0 +1,1 @@
+export default BASE_URL = "https://adf2-2405-201-a409-c1dc-d812-fb45-d09f-9ebb.ngrok.io";
