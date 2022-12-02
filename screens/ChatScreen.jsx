@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, FlatList, Image, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
-import BASE_URL from "../BASE_URL";
+import BASE_URL, { SOCKET_BASE_URL } from "../BASE_URL";
 import { authContext } from "../contexts/AuthContextWrapper";
 import { Dimensions } from 'react-native';
 import MyMessage from "../components/MyMessage";
@@ -14,9 +14,11 @@ const ChatScreen = ({ route }) => {
     const auth = useContext(authContext)
     const chatroom = route.params
     const [messages, setMessages] = useState([])
+    const [socket, setSocket] = useState([])
     const text = useRef('')
+
     const titleText = () => {
-        console.log(chatroom)
+
         let others = [];
 
         others = chatroom.members.filter((member) => {
@@ -28,16 +30,43 @@ const ChatScreen = ({ route }) => {
     }
 
 
+    useEffect(() => {
+        socket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log("I HAVE RECIEVD A MESSAGE ")
+
+            setMessages((m)=>{
+                return [...m, data.message]
+            })
+        };
+
+        socket.onclose = function (e) {
+            console.log('Chat socket closed unexpectedly');
+        };
+
+    }, [socket])
+
 
     useEffect(() => {
         getMessages()
+        setSocket(new WebSocket(
+            SOCKET_BASE_URL
+            + '/ws/chat/'
+            + chatroom.id.toString()
+            + '/'
+        ));
+        return ()=>{
+            socket.close()
+        }
+
+
     }, [])
 
 
     const getMessages = async () => {
         try {
             const resp = await axios.get(BASE_URL + '/api/chat/message/' + chatroom.id, { headers: { "Authorization": `Bearer ${auth.tokens.access}` } })
-            console.log(resp.data)
+
             setMessages(resp.data)
         } catch (e) {
             console.log(e)
@@ -45,6 +74,10 @@ const ChatScreen = ({ route }) => {
     }
 
     const sendMessage = async () => {
+        socket.send(JSON.stringify({
+            'message': { id: 100, text: text.current, user: { id: auth.user.user_id } }
+        }));
+        // TODO: if server failed last message has to be removed from the messages list ofc. But we know that face book and messenger care the about it 
         try {
             const resp = await axios.post(BASE_URL + '/api/chat/message/create/', {
                 text: text.current,
@@ -52,9 +85,6 @@ const ChatScreen = ({ route }) => {
 
             }, { headers: { "Authorization": `Bearer ${auth.tokens.access}` } })
 
-
-
-            setMessages([...messages, resp.data])
         } catch (e) {
             console.log(e)
         }
