@@ -10,12 +10,12 @@ const AuthContextWrapper = ({ children }) => {
     const [tokens, setTokens] = useState(null)
     const [user, setUser] = useState(null)
 
-    
+
 
 
     const signIn = async (username, password) => {
         try {
-            const resp = await axios.post(BASE_URL+"/api/token/", {
+            const resp = await axios.post(BASE_URL + "/api/token/", {
                 username, password
             })
             setTokens(resp.data)
@@ -29,10 +29,28 @@ const AuthContextWrapper = ({ children }) => {
     }
 
 
+    const signUp = async (username, password) => {
+        try {
+            const resp = await axios.post(BASE_URL + "/api/users/create/", {
+                username, password
+            })
+            const isSuccess = await signIn(username, password)
+            if(isSuccess == true){
+                return true
+            }else{
+                return false;
+            }
+        } catch (e) {
+            console.log(e)
+            return false
+        }
+    }
+
 
     value = {
         signIn: signIn,
         user: user,
+        signUp: signUp,
         tokens: tokens
     }
 
