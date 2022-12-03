@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import BASE_URL from '../BASE_URL.js'
 import { authContext } from "../contexts/AuthContextWrapper";
 const ChatsSection = ({ chats, setChats, navigation }) => {
@@ -20,12 +20,22 @@ const ChatsSection = ({ chats, setChats, navigation }) => {
     }
 
 
+    const getChatDisplayName = (members)=>{
+        const tempMmembers = members.filter((member)=>{
+            return member.id != auth.user.user_id
+        })
+        return tempMmembers[0].username
+    }
+
     return (
         <View>
-            {
-                chats.map((chat) => {
-                    return <TouchableOpacity onPress={()=>{
-                        navigation.navigate("chat", chat)
+            <FlatList
+                className=""
+                data={chats}
+                renderItem={({ item }) => {
+
+                    return <TouchableOpacity onPress={() => {
+                        navigation.navigate("chat", item)
                     }}>
                         <View className="flex-row py-2 px-2 items-center bg-white shadow-xl mb-2">
                             <Image className="h-12 w-12 rounded-full mr-4" source={{
@@ -33,14 +43,15 @@ const ChatsSection = ({ chats, setChats, navigation }) => {
                             }} />
                             <Text className="text-lg">
                                 {
-                                    // Get the name apart from auth user name
-                                    chat.members[1].username
+                                    getChatDisplayName(item.members)
                                 }
                             </Text>
                         </View>
                     </TouchableOpacity>
-                })
-            }
+                }}
+                keyExtractor={item => item.id}
+            />
+        
         </View>
     );
 }
