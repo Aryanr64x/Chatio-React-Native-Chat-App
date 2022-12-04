@@ -51,7 +51,8 @@ const AuthContextWrapper = ({ children }) => {
         signIn: signIn,
         user: user,
         signUp: signUp,
-        tokens: tokens
+        tokens: tokens,
+        setUser: setUser
     }
 
     return (

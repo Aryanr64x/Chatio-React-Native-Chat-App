@@ -8,20 +8,25 @@ import AuthContextWrapper from './contexts/AuthContextWrapper';
 import HomeScreen from './screens/HomeScreen';
 import ChatScreen from './screens/ChatScreen';
 const Stack = createNativeStackNavigator()
+import { Provider as PaperProvider } from 'react-native-paper';
+import ProfileUpdate from './screens/ProfileUpdate';
 
 
 export default function App() {
   return (
     <AuthContextWrapper>
-      <NavigationContainer>
-        <Stack.Navigator>
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
 
-          <Stack.Screen name="welcome" component={WelcomeScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="auth" component={AuthScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="home" component={HomeScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="chat" component={ChatScreen} options={{headerShown: false}} />
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Screen name="welcome" component={WelcomeScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="auth" component={AuthScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="home" component={HomeScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="chat" component={ChatScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Update Profile" component={ProfileUpdate} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
     </AuthContextWrapper>
   );
 }
