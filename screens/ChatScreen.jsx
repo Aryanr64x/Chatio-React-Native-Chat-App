@@ -23,10 +23,10 @@ const ChatScreen = ({ route }) => {
 
         others = chatroom.members.filter((member) => {
 
-            return member.id != auth.user.user_id
+            return member.user.id != auth.user.user_id
         })
 
-        return others[0].username
+        return others[0].user.username
     }
 
 
@@ -45,7 +45,7 @@ const ChatScreen = ({ route }) => {
         };
 
     }, [socket])
-
+ 
 
     useEffect(() => {
         getMessages()
@@ -91,7 +91,7 @@ const ChatScreen = ({ route }) => {
     }
 
     const displayAsPerSender = (message) => {
-        if (message.user.id == auth.user.user_id) {
+        if (message.profile.user.id == auth.user.user_id) {
             return <MyMessage message={message} />
         }
         return <OtherMessage message={message} />

@@ -22,9 +22,9 @@ const ChatsSection = ({ chats, setChats, navigation }) => {
 
     const getChatDisplayName = (members)=>{
         const tempMmembers = members.filter((member)=>{
-            return member.id != auth.user.user_id
+            return member.user.id != auth.user.user_id
         })
-        return tempMmembers[0].username
+        return tempMmembers[0].user.username
     }
 
     return (

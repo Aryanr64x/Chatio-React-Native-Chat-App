@@ -7,7 +7,7 @@ import SingleUserItem from "./SingleUserItem.jsx";
 
 const UsersSection = ({ chats, navigation }) => {
     const auth = useContext(authContext)
-    const [users, setUsers] = useState([])
+    const [profiles, setProfiles] = useState([])
     useEffect(() => {
         getUsers()
     }, [])
@@ -16,8 +16,8 @@ const UsersSection = ({ chats, navigation }) => {
         try {
             const resp = await axios.get(BASE_URL + '/api/', { headers: { "Authorization": `Bearer ${auth.tokens.access}` } })
             let tempUsers = resp.data
-            const fusers = tempUsers.filter((user) => { return user.id != auth.user.user_id })
-            setUsers(fusers)
+            const fusers = tempUsers.filter((profile) => { return profile.user.id != auth.user.user_id })
+            setProfiles(fusers)
         } catch (e) {
             // error
             console.log(e)
@@ -29,14 +29,14 @@ const UsersSection = ({ chats, navigation }) => {
         <View>
             <FlatList
                 className=""
-                data={users}
+                data={profiles}
                 renderItem={({ item }) => {
 
                     return (
-                        <SingleUserItem user={item} chats={chats} navigation={navigation} />
+                        <SingleUserItem profile={item} chats={chats} navigation={navigation} />
                     )
                 }}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.user.id}
             />
            
         </View>

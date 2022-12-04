@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import BASE_URL from "../BASE_URL";
 import { authContext } from "../contexts/AuthContextWrapper";
 
-const SingleUserItem = ({ user, chats, navigation }) => {
+const SingleUserItem = ({ profile, chats, navigation }) => {
     const auth = useContext(authContext)
     // Not group otimised loop ! reasonable
     const openOrCreateChatRoom = async()=>{
@@ -14,7 +14,7 @@ const SingleUserItem = ({ user, chats, navigation }) => {
             
             for(let j = 0; j < chats[i].members.length; j++){
                 
-                if(user.id == chats[i].members[j].id){
+                if(profile.user.id == chats[i].members[j].user.id){
                     
                     chatroom = chats[i]
                     chatFound = true
@@ -37,7 +37,7 @@ const SingleUserItem = ({ user, chats, navigation }) => {
 
     const createChatroom = async()=>{
         try{
-            const response = await axios.post(BASE_URL+'/api/chat/create/', {user_id: user.id},  { headers: {"Authorization" : `Bearer ${auth.tokens.access}`} });
+            const response = await axios.post(BASE_URL+'/api/chat/create/', {user_id: profile.user.id},  { headers: {"Authorization" : `Bearer ${auth.tokens.access}`} });
             console.log(response.data)
             return response.data
         }catch(e){
@@ -54,7 +54,7 @@ const SingleUserItem = ({ user, chats, navigation }) => {
                 uri: 'https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-set-image-stock-isolated-object-icon-collection-137161298.jpg'
             }} />
             <Text className="text-lg">
-                {user.username}
+                {profile.user.username}
             </Text>
         </View>
        </TouchableOpacity>
