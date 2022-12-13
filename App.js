@@ -19,7 +19,7 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator>
 
-            <Stack.Screen name="welcome" component={WelcomeScreen} options={{ headerShown: false }} />
+            <Stack.Screen  name="welcome" component={WelcomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="auth" component={AuthScreen} options={{ headerShown: false }} />
             <Stack.Screen name="home" component={HomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="chat" component={ChatScreen} options={{ headerShown: false }} />

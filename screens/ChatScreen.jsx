@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, FlatList, Image, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, Image, KeyboardAvoidingView, Platform, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
 import BASE_URL, { SOCKET_BASE_URL } from "../BASE_URL";
 import { authContext } from "../contexts/AuthContextWrapper";
 import { Dimensions } from 'react-native';
@@ -35,7 +35,7 @@ const ChatScreen = ({ route }) => {
             const data = JSON.parse(e.data);
             console.log("I HAVE RECIEVD A MESSAGE ")
 
-            setMessages((m)=>{
+            setMessages((m) => {
                 return [...m, data.message]
             })
         };
@@ -45,7 +45,7 @@ const ChatScreen = ({ route }) => {
         };
 
     }, [socket])
- 
+
 
     useEffect(() => {
         getMessages()
@@ -55,8 +55,8 @@ const ChatScreen = ({ route }) => {
             + chatroom.id.toString()
             + '/'
         ));
-        return ()=>{
-            socket.close()
+        return () => {
+            // socket.close()
         }
 
 
@@ -98,41 +98,43 @@ const ChatScreen = ({ route }) => {
     }
 
     return (
-        <View>
-            <View className="h-24 bg-red-600 flex-row items-center px-6 pt-8">
-                <Image className="h-12 w-12 rounded-full mr-4" source={{
-                    uri: 'https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-set-image-stock-isolated-object-icon-collection-137161298.jpg'
-                }} />
-                <Text className="text-2xl text-white">
-                    {titleText()}
-                </Text>
-                <View className="h-full">
+        <KeyboardAvoidingView  behavior="height" className=" h-full">
 
-                </View>
-            </View>
-            <View className="h-full justify-between" style={{ height: Dimensions.get('window').height - 1.5 * 96 }}>
-                <View className=" ">
-                    <FlatList
-                        className=""
-                        data={messages}
-                        renderItem={({ item }) => {
+          
+                <View className="h-24 bg-red-600 flex-row items-center px-6 pt-8">
+                    <Image className="h-12 w-12 rounded-full mr-4" source={{
+                        uri: 'https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-set-image-stock-isolated-object-icon-collection-137161298.jpg'
+                    }} />
+                    <Text className="text-2xl text-white">
+                        {titleText()}
+                    </Text>
+                    <View className="h-full">
 
-                            return displayAsPerSender(item)
-                        }}
-                        keyExtractor={item => item.id}
-                    />
+                    </View>
+                </View>
+                
+                    <View className="grow">
+                        <FlatList
+                            className=""
+                            data={messages}
+                            renderItem={({ item }) => {
 
-                </View>
-                <View className="flex-row items-center justify-between  ">
-                    <TextInput onChangeText={(t) => {
-                        text.current = t
-                    }} placeholder="Enter you message.." className="px-2 py-2 mx-2 border border-black mt-6 grow" />
-                    <TouchableOpacity className="p-3 mt-6 mr-2 rounded-full bg-red-600" onPress={sendMessage}>
-                        <Ionicons name='send' size={24} color='white' />
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
+                                return displayAsPerSender(item)
+                            }}
+                            keyExtractor={item => item.id}
+                        />
+
+                    </View>
+                    <View className="flex-row items-center justify-between  mb-4">
+                        <TextInput onChangeText={(t) => {
+                            text.current = t
+                        }} placeholder="Enter you message.." className="px-2 py-2 mx-2 border border-black mt-6 grow" />
+                        <TouchableOpacity className="p-3 mt-6 mr-2 rounded-full bg-red-600" onPress={sendMessage}>
+                            <Ionicons name='send' size={24} color='white' />
+                        </TouchableOpacity>
+                    </View>
+           
+        </KeyboardAvoidingView>
     );
 }
 

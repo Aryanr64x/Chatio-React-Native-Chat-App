@@ -4,6 +4,9 @@ import ChatsSection from "../components/ChatsSection";
 import UsersSection from "../components/UsersSection";
 import { authContext } from "../contexts/AuthContextWrapper";
 import { Text, Menu, Divider, Provider } from 'react-native-paper';
+import { StackActions } from '@react-navigation/native';
+
+const popAction = StackActions.pop(1);
 
 const HomeScreen = ({ navigation }) => {
     const [showMenu, setShowMenu] = useState(false)
@@ -33,7 +36,11 @@ const HomeScreen = ({ navigation }) => {
                             <Menu.Item onPress={() => { navigation.navigate("Update Profile") }} title="Update Profile" />
                             <Divider />
 
-                            <Menu.Item onPress={() => { }} title="Sign Out" />
+                            <Menu.Item onPress={() => {
+                                auth.setTokens(null)
+                                auth.setUser(null)
+                                navigation.dispatch(popAction);
+                            }} title="Sign Out" />
                             <Divider />
 
                         </Menu>

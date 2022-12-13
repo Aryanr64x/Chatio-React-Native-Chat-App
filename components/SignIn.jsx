@@ -1,20 +1,31 @@
-import { useContext, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { useContext, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native'
 import { authContext } from '../contexts/AuthContextWrapper';
+import { TextInput, Snackbar } from 'react-native-paper';
 
-const SignIn = ({ onShowSignUp, navigation }) => {
+
+const SignIn = ({ onShowSignUp, navigation, setShowSnackBar, setSnackBarText, setShowDialog }) => {
     const username = useRef('')
     const password = useRef('')
+
     const auth = useContext(authContext)
-    const signIn = async()=>{
-        const isSuccess = await auth.signIn(username.current, password.current)
-        if(isSuccess){
-            navigation.navigate("home")
+    const signIn = async () => {
+        if (username.current != '' && password.current != '') {
+            setShowDialog(true)
+            const isSuccess = await auth.signIn(username.current, password.current)
+            setShowDialog(false)
+            if (isSuccess) {
+                navigation.replace("home")
+            } else {
+                setShowSnackBar(true)
+                setSnackBarText("Oops! Something Went wrong . Try again later ")
+            }
         }else{
-            // failed ui
+            setShowSnackBar(true)
+            setSnackBarText("Please enter all the fields")
         }
     }
-    
+
 
     return (
         <View className="pt-8 px-4 justify-center h-full">
@@ -24,8 +35,9 @@ const SignIn = ({ onShowSignUp, navigation }) => {
             <Text className="mt-2">
                 Enter your login credentials below to get inside our virtual world of madness !
             </Text>
-            <TextInput onChangeText={(text)=>{username.current = text}}  placeholder="Enter your username.." className="px-2 py-2 border border-black mt-6" />
-            <TextInput onChangeText={(text)=>{password.current = text}} placeholder="Enter your password.." secureTextEntry={true} className="px-2 py-2 border border-black mt-4" />
+            <TextInput mode="outlined" label="Enter your password" activeOutlineColor="black" onChangeText={(text) => { username.current = text }} className="bg-red-100 mt-6" />
+            <TextInput mode="outlined" label="Enter your password" activeOutlineColor="black" onChangeText={(text) => { password.current = text }} secureTextEntry={true} className="bg-red-100 mt-6" />
+
             <View className="flex flex-row justify-between items-center">
                 <TouchableOpacity onPress={onShowSignUp}>
                     <Text className="text-base ">

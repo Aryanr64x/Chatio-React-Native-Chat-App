@@ -19,7 +19,7 @@ const ProfileUpdate = ({ navigation }) => {
         try {
 
             const resp = await axios.post(BASE_URL + '/api/user/update/', { image: image.base64 }, { headers: { "Authorization": `Bearer ${auth.tokens.access}` } });
-
+            
             console.log("BELOW IS THE RESPONSE")
             console.log(resp.data)
             auth.setUser({...auth.user, dp: resp.data.dp})
