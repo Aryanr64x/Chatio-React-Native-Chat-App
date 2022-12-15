@@ -5,6 +5,7 @@ import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 import SignUp from "../components/SignUp";
 import { Snackbar, Dialog, Provider, Portal, Paragraph } from "react-native-paper";
 const AuthScreen = ({ navigation }) => {
+  
   const [showSignUp, setShowSignUp] = useState(false)
   const [showSnackBar, setShowSnackBar] = useState(false)
   const [snackBarText, setSnackBarText] = useState('')

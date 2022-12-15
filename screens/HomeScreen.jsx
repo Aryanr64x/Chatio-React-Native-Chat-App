@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
     const [chats, setChats] = useState([])
     const auth = useContext(authContext)
 
-    console.log(auth.user)
+    console.log(BASE_URL +'/'+ auth.user.dp)
     return (
         <Provider>
             <View>
@@ -29,10 +29,9 @@ const HomeScreen = ({ navigation }) => {
                             onDismiss={() => { setShowMenu(false) }}
                             anchor={<TouchableOpacity onPress={() => { setShowMenu(true) }}>
                                 <Image className="h-12 w-12 rounded-full mr-4" source={{
-                                    uri: (auth.user.dp == null || auth.user.dp == '') ? ('https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-set-image-stock-isolated-object-icon-collection-137161298.jpg') : (BASE_URL + auth.user.dp)
-
-                                }} resizeMode="stretch" />
-                            </TouchableOpacity>}>
+                                    uri: (auth.user.dp == null || auth.user.dp == '') ? ('https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-set-image-stock-isolated-object-icon-collection-137161298.jpg') : (BASE_URL +'/'+ auth.user.dp) }}
+                                     resizeMode="stretch" /> 
+                            </TouchableOpacity>} >
                             <Menu.Item onPress={() => { navigation.navigate("Update Profile") }} title="Update Profile" />
                             <Divider />
 

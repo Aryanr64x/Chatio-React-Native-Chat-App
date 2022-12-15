@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { authContext } from "../contexts/AuthContextWrapper";
+import { Snackbar, Dialog, Provider, Portal, Paragraph, ActivityIndicator, MD2Colors } from "react-native-paper";
 
 
 
@@ -11,20 +12,20 @@ import { authContext } from "../contexts/AuthContextWrapper";
 const ProfileUpdate = ({ navigation }) => {
     const [image, setImage] = useState(null)
     const auth = useContext(authContext)
+    const [dialog, setDialog] = useState(false);
 
 
 
     const sendPhoto = async () => {
-
+        setDialog(true)
         try {
 
-            const resp = await axios.post(BASE_URL + '/api/user/update/', { image: image.base64 }, { headers: { "Authorization": `Bearer ${auth.tokens.access}` } });
-            
-            console.log("BELOW IS THE RESPONSE")
-            console.log(resp.data)
-            auth.setUser({...auth.user, dp: resp.data.dp})
+            const resp = await axios.put(BASE_URL + '/api/user', { image: image.base64 }, { headers: { "Authorization": `Bearer ${auth.tokens}` } });
+            setDialog(false)
+            auth.setUser({...auth.user, dp: resp.data})
             navigation.pop()
         } catch (e) {
+            setDialog(false)
             console.log(e)
         }
 
@@ -48,7 +49,7 @@ const ProfileUpdate = ({ navigation }) => {
             quality: 1,
         });
 
-        console.log(result);
+       
 
         if (!result.canceled) {
             setImage(result.assets[0]);
@@ -69,6 +70,14 @@ const ProfileUpdate = ({ navigation }) => {
             <TouchableOpacity onPress={sendPhoto} className="mt-2 px-2 py-2 rounded-3xl bg-red-600"><Text className="text-white">Update Profile</Text></TouchableOpacity>
 
         </View>
+        <Portal>
+            <Dialog visible={dialog} onDismiss={()=>{setDialog(false)}}>
+            
+            <Dialog.Content>
+              <Paragraph>  Please wait for some time.. <ActivityIndicator animating={true} color={MD2Colors.red800} className="ml-8" /> </Paragraph>
+            </Dialog.Content>
+            </Dialog>
+          </Portal>
     </View>)
 }
 

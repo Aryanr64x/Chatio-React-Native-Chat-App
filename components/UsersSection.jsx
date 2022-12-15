@@ -9,7 +9,7 @@ import SingleUserItem from "./SingleUserItem.jsx";
 
 const UsersSection = ({ chats, navigation }) => {
     const auth = useContext(authContext)
-    const [profiles, setProfiles] = useState([])
+    const [users, setUsers] = useState([])
     const [fetchingUsers, setFetchingUsers] = useState(true)
     useEffect(() => {
         getUsers()
@@ -17,11 +17,9 @@ const UsersSection = ({ chats, navigation }) => {
 
     const getUsers = async () => {
         try {
-            const resp = await axios.get(BASE_URL + '/api/', { headers: { "Authorization": `Bearer ${auth.tokens.access}` } })
+            const resp = await axios.get(BASE_URL + '/api/user', { headers: { "Authorization": `Bearer ${auth.tokens}` } })
             setFetchingUsers(false)
-            let tempUsers = resp.data
-            const fusers = tempUsers.filter((profile) => { return profile.user.id != auth.user.user_id })
-            setProfiles(fusers)
+            setUsers(resp.data)
         } catch (e) {
             // error
             console.log(e)
@@ -39,16 +37,16 @@ const UsersSection = ({ chats, navigation }) => {
                     </View>
                 ) : (<FlatList
                     className=""
-                    data={profiles}
+                    data={users}
                     renderItem={
                         ({ item }) => {
 
                             return (
-                                <SingleUserItem profile={item} chats={chats} navigation={navigation} />
+                                <SingleUserItem user={item} chats={chats} navigation={navigation} />
                             )
                         }
                     }
-                    keyExtractor={item => item.user.id}
+                    keyExtractor={item => item.id}
                 />)
             }
         </View>

@@ -15,11 +15,12 @@ const AuthContextWrapper = ({ children }) => {
 
     const signIn = async (username, password) => {
         try {
-            const resp = await axios.post(BASE_URL + "/api/token/", {
+            const resp = await axios.post(BASE_URL + "/api/login", {
                 username, password
             })
-            setTokens(resp.data)
-            setUser(jwt_decode(resp.data.access))
+            console.log(resp.data)
+            setTokens(resp.data.token)
+            setUser(resp.data.user)
             return true
         } catch (e) {
             console.log(e)
@@ -31,15 +32,13 @@ const AuthContextWrapper = ({ children }) => {
 
     const signUp = async (username, password) => {
         try {
-            const resp = await axios.post(BASE_URL + "/api/users/create/", {
+            const resp = await axios.post(BASE_URL + "/api/register", {
                 username, password
             })
-            const isSuccess = await signIn(username, password)
-            if(isSuccess == true){
-                return true
-            }else{
-                return false;
-            }
+            
+            setTokens(resp.data.token);
+            setUser(resp.data.user);
+            return true;
         } catch (e) {
             console.log(e)
             return false
