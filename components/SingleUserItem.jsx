@@ -53,10 +53,10 @@ const SingleUserItem = ({ user, chats, navigation }) => {
     return (
        <TouchableOpacity onPress={openOrCreateChatRoom}>
          <View className="flex-row py-2 px-2 items-center bg-white shadow-xl mb-2">
-            {/* <Image className="h-12 w-12 rounded-full mr-4" source={{
+            <Image className="h-12 w-12 rounded-full mr-4" source={{
                 // uri: 'https://f3a8-2405-201-a409-c1dc-4d5-b994-5554-79c4.ngrok.io/media/images/callbg.jpg'
-                uri: (profile.dp == null || profile.dp == '') ? ('https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-set-image-stock-isolated-object-icon-collection-137161298.jpg') : (BASE_URL+profile.dp) 
-            }} /> */}
+                uri: (user.dp == null || user.dp == '') ? ('https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-set-image-stock-isolated-object-icon-collection-137161298.jpg') : (BASE_URL+user.dp) 
+            }} />
             <Text className="text-lg">
                 {user.username}
             </Text>

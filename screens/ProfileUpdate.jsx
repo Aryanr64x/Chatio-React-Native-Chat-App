@@ -73,8 +73,9 @@ const ProfileUpdate = ({ navigation }) => {
         <Portal>
             <Dialog visible={dialog} onDismiss={()=>{setDialog(false)}}>
             
-            <Dialog.Content>
-              <Paragraph>  Please wait for some time.. <ActivityIndicator animating={true} color={MD2Colors.red800} className="ml-8" /> </Paragraph>
+            <Dialog.Content className="flex-row">
+              <Paragraph className="">  Please wait for some time..</Paragraph>
+              <ActivityIndicator animating={true} color={MD2Colors.red800} className="ml-4" /> 
             </Dialog.Content>
             </Dialog>
           </Portal>

@@ -10,7 +10,11 @@ const AuthContextWrapper = ({ children }) => {
     const [tokens, setTokens] = useState(null)
     const [user, setUser] = useState(null)
 
-
+    useEffect(()=>{
+        if(user == null){
+            
+        }
+    }, [user])
 
 
     const signIn = async (username, password) => {
@@ -35,7 +39,7 @@ const AuthContextWrapper = ({ children }) => {
             const resp = await axios.post(BASE_URL + "/api/register", {
                 username, password
             })
-            
+
             setTokens(resp.data.token);
             setUser(resp.data.user);
             return true;
@@ -46,13 +50,26 @@ const AuthContextWrapper = ({ children }) => {
     }
 
 
+    const logout = async() => {
+        console.log("SHIT IS SUCCESSFUL");
+        try {
+            await axios.delete(BASE_URL + '/api/logout', { headers: { "Authorization": `Bearer ${tokens}` }} );
+            return true;
+        } catch (e) {
+            console.log(e);
+            return false;
+        }
+    }
+
+
     value = {
         signIn: signIn,
         user: user,
         signUp: signUp,
         tokens: tokens,
         setUser: setUser,
-        setTokens: setTokens
+        setTokens: setTokens,
+        logout: logout
     }
 
     return (

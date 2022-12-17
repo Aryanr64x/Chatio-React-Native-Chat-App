@@ -10,12 +10,14 @@ import OtherMessage from "../components/OtherMessage";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { echoContext } from "../contexts/EchoContextWrapper";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
 
 const ChatScreen = ({ route }) => {
     const auth = useContext(authContext)
     const chatroom = route.params
     const [messages, setMessages] = useState([])
+    const [loading, setLoading] = useState(true)
     const echo = useContext(echoContext)
     const text = useRef('')
 
@@ -37,14 +39,14 @@ const ChatScreen = ({ route }) => {
 
     useEffect(() => {
 
-      
 
-        echo.echo.channel('chatio'+ chatroom.id).subscribed(() => {
+
+        echo.echo.channel('chatio' + chatroom.id).subscribed(() => {
             console.log('You are subscribed');
         }).listen('.message.new', (e) => {
-            
-            setMessages((messages)=>{return [...messages, e]});
-          
+
+            setMessages((messages) => { return [...messages, e] });
+
         })
 
 
@@ -65,9 +67,10 @@ const ChatScreen = ({ route }) => {
     const getMessages = async () => {
         try {
             const resp = await axios.get(BASE_URL + '/api/message/' + chatroom.id, { headers: { "Authorization": `Bearer ${auth.tokens}` } })
-
+            setLoading(false)
             setMessages(resp.data)
         } catch (e) {
+            setLoading(false)
             console.log(e)
         }
     }
@@ -108,18 +111,21 @@ const ChatScreen = ({ route }) => {
                 </View>
             </View>
 
-            <View className="grow">
-                <FlatList
-                    className=""
-                    data={messages}
-                    renderItem={({ item }) => {
+            {
+                (loading) ? (<View className="grow justify-center items-center"><ActivityIndicator animating={true} color={MD2Colors.red800} className="ml-4"  /></View>) :
+                 ((messages.length != 0) ? (<View className="grow">
+                 <FlatList
+                     className=""
+                     data={messages}
+                     renderItem={({ item }) => {
 
-                        return displayAsPerSender(item)
-                    }}
-                    keyExtractor={item => item.id}
-                />
+                         return displayAsPerSender(item)
+                     }}
+                     keyExtractor={item => item.id}
+                 />
 
-            </View>
+             </View>) : (<Text className="text-lg max-w-2xl mx-auto mt-8">No Messages Yet ! Start up a conversation 😉</Text>))
+            }
             <View className="flex-row items-center justify-between  mb-4">
                 <TextInput onChangeText={(t) => {
                     text.current = t
@@ -129,7 +135,7 @@ const ChatScreen = ({ route }) => {
                 </TouchableOpacity>
             </View>
 
-        </KeyboardAvoidingView>
+        </KeyboardAvoidingView >
     );
 }
 
