@@ -1,7 +1,7 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import jwt_decode from "jwt-decode";
-import BASE_URL from '../BASE_URL.js'
+import BASE_URL from '../constants/BASE_URL.js'
 import { Buffer } from "buffer";
 
 import Echo from 'laravel-echo';

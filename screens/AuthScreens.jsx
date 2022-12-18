@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { View, Text } from "react-native";
 import SignIn from "../components/SignIn";
-import { ActivityIndicator, MD2Colors } from 'react-native-paper';
+
 import SignUp from "../components/SignUp";
-import { Snackbar, Dialog, Provider, Portal, Paragraph } from "react-native-paper";
+import { Snackbar, Provider} from "react-native-paper";
+import LoadingDialog from "../components/LoadingDialog";
+
+
+
+
 const AuthScreen = ({ navigation }) => {
   
   const [showSignUp, setShowSignUp] = useState(false)
   const [showSnackBar, setShowSnackBar] = useState(false)
   const [snackBarText, setSnackBarText] = useState('')
-  const [showDialog, setShowDialog] = useState(false)
-
+  
 
   return (
     <Provider>
@@ -28,15 +32,7 @@ const AuthScreen = ({ navigation }) => {
             {snackBarText}
           </Snackbar>
             
-          <Portal>
-            <Dialog visible={showDialog} onDismiss={()=>{setShowDialog(false)}}>
-            
-            <Dialog.Content className="flex-row">
-              <Paragraph className="">  Please wait for some time..</Paragraph>
-              <ActivityIndicator animating={true} color={MD2Colors.red800} className="ml-4" /> 
-            </Dialog.Content>
-            </Dialog>
-          </Portal>
+          <LoadingDialog showDialog={showDialog}  setShowDialog={setShowDialog} />
 
         </View>
       </View>

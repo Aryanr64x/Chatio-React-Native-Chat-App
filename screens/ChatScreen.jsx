@@ -1,31 +1,24 @@
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, FlatList, Image, KeyboardAvoidingView, Platform, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
-import BASE_URL, { SOCKET_BASE_URL } from "../BASE_URL";
+import BASE_URL, { SOCKET_BASE_URL } from "../constants/BASE_URL";
 import { authContext } from "../contexts/AuthContextWrapper";
 
-import MyMessage from "../components/MyMessage";
-import OtherMessage from "../components/OtherMessage";
+import MyMessage from "../components/chats/MyMessage";
+import OtherMessage from "../components/chats/OtherMessage";
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { echoContext } from "../contexts/EchoContextWrapper";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
-
+import ChatScreenNavbar from "../components/navbars/ChatScreenNavbar";
+import useFetching from "../hooks/useFetching";
 
 const ChatScreen = ({ route }) => {
     const auth = useContext(authContext)
     const chatroom = route.params
-    const [messages, setMessages] = useState([])
-    const [loading, setLoading] = useState(true)
-    const echo = useContext(echoContext)
-    const text = useRef('')
-
-
-
-
-    const titleText = () => {
-
+    const [messages, loading, setMessages] = useFetching([], 'message/'+chatroom.id)
+    const [displayedUser, setDisplayedUser] = useState(() => {
         let others = [];
 
         others = chatroom.users.filter((member) => {
@@ -33,14 +26,16 @@ const ChatScreen = ({ route }) => {
             return member.id != auth.user.id
         })
 
-        return others[0].username
-    }
+        return others[0];
+    })
+    
+    const echo = useContext(echoContext)
+    const text = useRef('')
+
+  
 
 
     useEffect(() => {
-
-
-
         echo.echo.channel('chatio' + chatroom.id).subscribed(() => {
             console.log('You are subscribed');
         }).listen('.message.new', (e) => {
@@ -48,36 +43,12 @@ const ChatScreen = ({ route }) => {
             setMessages((messages) => { return [...messages, e] });
 
         })
-
-
+       
     }, [])
 
-
-    useEffect(() => {
-        getMessages()
-
-        return () => {
-
-        }
-
-
-    }, [])
-
-
-    const getMessages = async () => {
-        try {
-            const resp = await axios.get(BASE_URL + '/api/message/' + chatroom.id, { headers: { "Authorization": `Bearer ${auth.tokens}` } })
-            setLoading(false)
-            setMessages(resp.data)
-        } catch (e) {
-            setLoading(false)
-            console.log(e)
-        }
-    }
 
     const sendMessage = async () => {
 
-        // TODO: if server failed last message has to be removed from the messages list ofc. But we know that face book and messenger care the about it 
         try {
             const resp = await axios.post(BASE_URL + '/api/message/' + chatroom.id, {
                 text: text.current,
@@ -95,36 +66,29 @@ const ChatScreen = ({ route }) => {
         return <OtherMessage message={message} />
     }
 
+
+
+
     return (
-        <KeyboardAvoidingView behavior="height" className=" h-full">
+        <KeyboardAvoidingView behavior="height" className=" h-full">   
 
 
-            <View className="h-24 bg-red-600 flex-row items-center px-6 pt-8">
-                <Image className="h-12 w-12 rounded-full mr-4" source={{
-                    uri: 'https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-set-image-stock-isolated-object-icon-collection-137161298.jpg'
-                }} />
-                <Text className="text-2xl text-white">
-                    {titleText()}
-                </Text>
-                <View className="h-full">
-
-                </View>
-            </View>
+            <ChatScreenNavbar username={displayedUser.username} dp={displayedUser.dp} />
 
             {
-                (loading) ? (<View className="grow justify-center items-center"><ActivityIndicator animating={true} color={MD2Colors.red800} className="ml-4"  /></View>) :
-                 ((messages.length != 0) ? (<View className="grow">
-                 <FlatList
-                     className=""
-                     data={messages}
-                     renderItem={({ item }) => {
+                (loading) ? (<View className="grow justify-center items-center"><ActivityIndicator animating={true} color={MD2Colors.red800} className="ml-4" /></View>) :
+                    ((messages.length != 0) ? (<View className="grow">
+                        <FlatList
+                            className=""
+                            data={messages}
+                            renderItem={({ item }) => {
 
-                         return displayAsPerSender(item)
-                     }}
-                     keyExtractor={item => item.id}
-                 />
+                                return displayAsPerSender(item)
+                            }}
+                            keyExtractor={item => item.id}
+                        />
 
-             </View>) : (<Text className="text-lg max-w-2xl mx-auto mt-8">No Messages Yet ! Start up a conversation 😉</Text>))
+                    </View>) : (<Text className=" grow text-lg max-w-2xl mx-auto mt-8">No Messages Yet ! Start up a conversation 😉</Text>))
             }
             <View className="flex-row items-center justify-between  mb-4">
                 <TextInput onChangeText={(t) => {

@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native'
-import { authContext } from '../contexts/AuthContextWrapper';
+import { authContext } from '../../contexts/AuthContextWrapper';
 import { TextInput, Snackbar } from 'react-native-paper';
 
 
@@ -35,7 +35,7 @@ const SignIn = ({ onShowSignUp, navigation, setShowSnackBar, setSnackBarText, se
             <Text className="mt-2">
                 Enter your login credentials below to get inside our virtual world of madness !
             </Text>
-            <TextInput mode="outlined" label="Enter your password" activeOutlineColor="black" onChangeText={(text) => { username.current = text }} className="bg-red-100 mt-6" />
+            <TextInput mode="outlined" label="Enter your username" activeOutlineColor="black" onChangeText={(text) => { username.current = text }} className="bg-red-100 mt-6" />
             <TextInput mode="outlined" label="Enter your password" activeOutlineColor="black" onChangeText={(text) => { password.current = text }} secureTextEntry={true} className="bg-red-100 mt-6" />
 
             <View className="flex flex-row justify-between items-center">

@@ -1,31 +1,13 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+
 import { FlatList, View, Text } from "react-native";
-import BASE_URL from '../BASE_URL.js'
-import { authContext } from "../contexts/AuthContextWrapper";
 import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 
 import SingleUserItem from "./SingleUserItem.jsx";
+import useFetching from "../../hooks/useFetching.js";
 
 const UsersSection = ({ chats, navigation }) => {
-    const auth = useContext(authContext)
-    const [users, setUsers] = useState([])
-    const [fetchingUsers, setFetchingUsers] = useState(true)
-    useEffect(() => {
-        getUsers()
-    }, [])
-
-    const getUsers = async () => {
-        try {
-            const resp = await axios.get(BASE_URL + '/api/user', { headers: { "Authorization": `Bearer ${auth.tokens}` } })
-            setFetchingUsers(false)
-            setUsers(resp.data)
-        } catch (e) {
-            // error
-            console.log(e)
-        }
-    }
-
+    
+    const [users, fetchingUsers, setUsers] = useFetching([], 'user')
 
     return (
         <View>

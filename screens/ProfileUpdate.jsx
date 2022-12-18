@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { authContext } from "../contexts/AuthContextWrapper";
-import { Snackbar, Dialog, Provider, Portal, Paragraph, ActivityIndicator, MD2Colors } from "react-native-paper";
+import LoadingDialog from "../components/LoadingDialog";
 
 
 
@@ -70,15 +70,7 @@ const ProfileUpdate = ({ navigation }) => {
             <TouchableOpacity onPress={sendPhoto} className="mt-2 px-2 py-2 rounded-3xl bg-red-600"><Text className="text-white">Update Profile</Text></TouchableOpacity>
 
         </View>
-        <Portal>
-            <Dialog visible={dialog} onDismiss={()=>{setDialog(false)}}>
-            
-            <Dialog.Content className="flex-row">
-              <Paragraph className="">  Please wait for some time..</Paragraph>
-              <ActivityIndicator animating={true} color={MD2Colors.red800} className="ml-4" /> 
-            </Dialog.Content>
-            </Dialog>
-          </Portal>
+        <LoadingDialog setShowDialog={setDialog} showDialog={dialog} />
     </View>)
 }
 

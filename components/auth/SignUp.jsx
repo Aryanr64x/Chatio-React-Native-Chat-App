@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native'
-import { authContext } from '../contexts/AuthContextWrapper';
+import { authContext } from '../../contexts/AuthContextWrapper';
 import { Snackbar, TextInput } from 'react-native-paper';
 
 
